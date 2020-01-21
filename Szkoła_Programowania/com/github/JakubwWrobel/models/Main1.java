@@ -1,12 +1,14 @@
-package com.github.JakubwWrobel.Business_Models;
+package com.github.JakubwWrobel.models;
 
-import com.github.JakubwWrobel.ADDins.GetConnection;
+import com.github.JakubwWrobel.addin.GetConnection;
+import com.github.JakubwWrobel.dao.UserDAO;
 
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Scanner;
+
 public class Main1 {
 
     public static void main(String[] args) {
@@ -14,22 +16,25 @@ public class Main1 {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj nazwę użytkownika: ");
 
-        try{
+        try {
             Connection connection = GetConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user");
             preparedStatement.executeQuery();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println("test");
 
-        User u = new User(1,"Jakub","mail","ala");
+            User u = new User("Jakub", "mail", "ala");
             System.out.println(u.getPassword());
-            System.out.println(u.checkPassword("alaa"));
+            System.out.println(u.checkPassword("ala"));
 
-
+            UserDAO ud = new UserDAO();
+            ud.create(u);
         }
+    }
+}
 
-        boolean running = true;
+/*        boolean running = true;
         while (running == true) {
             try {
                 String str = scanner.nextLine();
@@ -52,4 +57,4 @@ public class Main1 {
             return false;
         }
     }
-}
+}*/

@@ -1,4 +1,4 @@
-package com.github.JakubwWrobel.Business_Models;
+package com.github.JakubwWrobel.models;
 
 public class UserGroup {
     private int id;
