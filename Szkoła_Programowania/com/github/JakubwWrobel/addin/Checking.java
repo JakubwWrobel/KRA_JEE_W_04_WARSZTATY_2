@@ -12,7 +12,6 @@ public class Checking {
     public static String checkingString(String str) {
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
-
         while (running) {
             if (str.isEmpty() || str == null) {
                 System.out.println("Podana wartość nie może być pusta");

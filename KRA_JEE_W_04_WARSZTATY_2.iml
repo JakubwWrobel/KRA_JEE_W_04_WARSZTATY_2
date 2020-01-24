@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="WEB_MODULE" version="4">
+<module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Szkoła_Programowania" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="src" level="project" />
-    <orderEntry type="library" name="KRA_JEE_W_04_WARSZTATY_2" level="project" />
+    <orderEntry type="library" exported="" name="KRA_JEE_W_04_WARSZTATY_2" level="project" />
   </component>
 </module>

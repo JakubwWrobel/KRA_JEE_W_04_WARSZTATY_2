@@ -1,5 +1,6 @@
 package com.github.JakubwWrobel.models;
 
+import com.github.JakubwWrobel.dao.UserGroupDAO;
 import jbcrypt.BCrypt;
 
 public class User {
@@ -7,12 +8,19 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private UserGroup userGroup;
 
     public User(String username, String email, String password) {
 
         this.username = username;
         this.email = email;
         setPassword(password);
+    }
+    public User(String username, String email, String password, UserGroup userGroup) {
+        this.username = username;
+        this.email = email;
+        setPassword(password);
+        this.userGroup = userGroup;
     }
     public User(){};
 
@@ -25,6 +33,7 @@ public class User {
     }
 
     ;
+
 
     //GETTER
     public int getId() {
@@ -43,6 +52,10 @@ public class User {
         return password;
     }
 
+    public UserGroup getUserGroup(){
+        return this.userGroup;
+    }
+
     //SETTER
     public void setId(int id) {
         this.id = id;
@@ -58,6 +71,10 @@ public class User {
 
     public void setPassword(String password) {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public void setUserGroup(UserGroup userGroup){
+        this.userGroup = userGroup;
     }
 
 
