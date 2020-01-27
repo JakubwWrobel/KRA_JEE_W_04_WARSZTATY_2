@@ -5,11 +5,11 @@ public class Exercise {
     private String title;
     private String description;
 
-    public Exercise(int id, String title, String description) {
-        this.id = id;
+    public Exercise(String title, String description) {
         this.title = title;
         this.description = description;
     }
+    public Exercise(){};
 
 
 

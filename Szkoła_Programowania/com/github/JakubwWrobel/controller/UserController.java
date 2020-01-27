@@ -75,24 +75,6 @@ public class UserController {
         userDAO.read(userInputId);
     }
 
-    private static User[] findAll() {
-        User[] users = userDAO.findAll();
-        boolean running = true;
-        while (running) {
-            if (users == null) {
-                System.out.println("Nie ma użytkowników do zwrócenia");
-                return null;
-            } else {
-                for (int i = 0; i < users.length; i++) {
-                    System.out.println(String.format("ID: %s\nNazwa użytkownika: %s\nEmail: %s\nGrupa: %s\n", users[i].getId(), users[i].getUsername(), users[i].getEmail(), users[i].getUserGroup().getUserGroupName()));
-                }
-                running = false;
-                return users;
-            }
-        }
-        return null;
-    }
-
     private static void updateUser() {
         Scanner scanner = new Scanner(System.in);
         userDAO.findAll();
@@ -119,8 +101,6 @@ public class UserController {
                         System.out.println("Podana groupa nie istnieje");
                     } else {
                         user.setUserGroup(userGroup);
-
-
                         try {
                             userDAO.update(user);
                             running = false;
@@ -132,8 +112,11 @@ public class UserController {
                 }
             }
         }
+        System.out.println("Użytkownik został zaaktualizowany");
         scanner.close();
     }
+
+
 
 
     private static void removeUser() {
@@ -153,6 +136,23 @@ public class UserController {
             }
         }
 
+    }
+    private static User[] findAll() {
+        User[] users = userDAO.findAll();
+        boolean running = true;
+        while (running) {
+            if (users == null) {
+                System.out.println("Nie ma użytkowników do zwrócenia");
+                return null;
+            } else {
+                for (int i = 0; i < users.length; i++) {
+                    System.out.println(String.format("ID: %s\nNazwa użytkownika: %s\nEmail: %s\nGrupa: %s\n", users[i].getId(), users[i].getUsername(), users[i].getEmail(), users[i].getUserGroup().getUserGroupName()));
+                }
+                running = false;
+                return users;
+            }
+        }
+        return null;
     }
 
 }
