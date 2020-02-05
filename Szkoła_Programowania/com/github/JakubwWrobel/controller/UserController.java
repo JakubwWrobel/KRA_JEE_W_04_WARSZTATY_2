@@ -14,20 +14,23 @@ import java.util.Scanner;
 public class UserController {
     private static UserDAO userDAO = new UserDAO();
     private static UserGroupDAO userGroupDAO = new UserGroupDAO();
-
+    private static UserGroupController userGroupController = new UserGroupController();
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
         System.out.println("Display Model");
 //        addUser();
 //        readUser();
-        updateUser();
+//        updateUser();
 //        removeUser();
 //        findAll();
+//        findAllByGroupId();
+        assignGroupToUser();
 
 
     }
 
-    private static void addUser() {
+    protected static void addUser() {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
@@ -60,23 +63,22 @@ public class UserController {
                         }
                     }
                 }
+                running = false;
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("Podany email jest już wykorzystany");
             }
         }
         System.out.println("Użytkownik został dodany");
-        scanner.close();
     }
 
 
-    private static void readUser() {
+    protected static void readUser() {
 
         int userInputId = Checking.checkingInt();
         userDAO.read(userInputId);
     }
 
-    private static void updateUser() {
-        Scanner scanner = new Scanner(System.in);
+    protected static void updateUser() {
         userDAO.findAll();
         System.out.println();
 //UPDATE
@@ -103,6 +105,7 @@ public class UserController {
                         user.setUserGroup(userGroup);
                         try {
                             userDAO.update(user);
+                            System.out.println("Użytkownik został zaaktualizowany");
                             running = false;
                         } catch (SQLIntegrityConstraintViolationException e) {
 //CZY POWINIEM TUTAJ OBSŁUGIWAĆ TEN BŁĄÐ?
@@ -112,20 +115,41 @@ public class UserController {
                 }
             }
         }
-        System.out.println("Użytkownik został zaaktualizowany");
-        scanner.close();
     }
 
 
+    protected static void assignGroupToUser() {
+        boolean running = true;
+        int userInput;
+        while (running) {
+            findAll();
+            System.out.println("Podaj ID użytkownika do którego chcesz przypisać groupę użytkowników");
+            userInput = Checking.checkingInt();
+            User user = userDAO.read(userInput);
+            if (user == null) {
+                System.out.println("Podany użytkownik nie istnieje");
+            } else {
+                while (running) {
+                    UserGroupController.findAll();
+                    System.out.println("Podaj ID grupy do której chcesz przypisać użytkownika: ");
+                    UserGroup userGroup = userGroupDAO.read(Checking.checkingInt());
+                    if (userGroup == null) {
+                        System.out.println("Podana grupa nie istnieje");
+                    } else {
+                        userGroupDAO.insertUserGroupToUser(user, userGroup.getUserGroupId());
+                        System.out.println("Użytkownik został przypisany do grupy");
+                        running = false;
+                    }
+                }
+            }
+        }
+    }
 
-
-    private static void removeUser() {
-//Czy scanner powinien być otwierany za każdym razem?
+    protected static void removeUser() {
         boolean running = true;
         while (running) {
             userDAO.findAll();
             System.out.println("Podaj ID użytkownika, którego chcesz usunąć");
-            Scanner scanner = new Scanner(System.in);
             int userInput = Checking.checkingInt();
             User user = userDAO.read(userInput); //CAN GIVE NULL
             if (user == null) {
@@ -137,16 +161,45 @@ public class UserController {
         }
 
     }
-    private static User[] findAll() {
+
+    protected static void findAllByGroupId() {
+        userGroupDAO.showAll();
+        System.out.println("Podaj ID group dla której chcesz wyświetlić użytkowników");
+        int userGroupId;
+        int userInput = Checking.checkingInt();
+        UserGroup userGroup = userGroupDAO.read(userInput);
+        if (userGroup == null) {
+            System.out.println("Podana groupa nie istnieje");
+        } else {
+            User[] users = userDAO.findAllByGroupId(userInput);
+
+            for (User user : users) {
+                if (user.getUserGroup() == null) {
+                    userGroupId = 0;
+                } else {
+                    userGroupId = user.getUserGroup().getUserGroupId();
+                }
+                System.out.println(String.format("ID: %s\nUsername: %s\nEmail: %s\nUser Group ID: %s\n", user.getId(), user.getUsername(), user.getEmail(), userGroupId));
+            }
+        }
+    }
+
+    protected static User[] findAll() {
         User[] users = userDAO.findAll();
         boolean running = true;
+        int userGroupId;
         while (running) {
             if (users == null) {
                 System.out.println("Nie ma użytkowników do zwrócenia");
                 return null;
             } else {
                 for (int i = 0; i < users.length; i++) {
-                    System.out.println(String.format("ID: %s\nNazwa użytkownika: %s\nEmail: %s\nGrupa: %s\n", users[i].getId(), users[i].getUsername(), users[i].getEmail(), users[i].getUserGroup().getUserGroupName()));
+                    if (users[i].getUserGroup() == null) {
+                        userGroupId = 0;
+                    } else {
+                        userGroupId = users[i].getUserGroup().getUserGroupId();
+                    }
+                    System.out.println(String.format("ID: %s\nNazwa użytkownika: %s\nEmail: %s\nGrupa: %s\n", users[i].getId(), users[i].getUsername(), users[i].getEmail(), userGroupId));
                 }
                 running = false;
                 return users;

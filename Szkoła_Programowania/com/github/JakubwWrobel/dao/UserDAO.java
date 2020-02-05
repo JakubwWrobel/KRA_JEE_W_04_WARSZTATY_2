@@ -3,6 +3,7 @@ package com.github.JakubwWrobel.dao;
 import com.github.JakubwWrobel.addin.GetConnection;
 import com.github.JakubwWrobel.models.User;
 import com.github.JakubwWrobel.models.UserGroup;
+import com.mysql.cj.log.NullLogger;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -18,6 +19,8 @@ public class UserDAO {
             "DELETE FROM users WHERE id = ?";
     private static final String FIND_ALL_USERS_QUERY =
             "SELECT * FROM users";
+    private static final String FIND_ALL_USERS_BY_USER_GROUP =
+            "SELECT * FROM users WHERE user_group_id = ?";
     private PreparedStatement statement;
     UserGroupDAO userGroupDAO = new UserGroupDAO();
 
@@ -66,9 +69,10 @@ public class UserDAO {
 
                 return user;
             } else {
-                System.out.println("Podany użytkownik nie istnieje");
                 return null;
             }
+        } catch (NullPointerException e) {
+            return null;
         } catch (SQLException e) {
             System.out.println("Błąd połączenia z bazą");
         }
@@ -115,7 +119,6 @@ public class UserDAO {
 
     public User[] findAll() {
         try (Connection conn = GetConnection.getConnection()) {
-
             User[] users = new User[0];
             PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERS_QUERY);
             ResultSet resultSet = statement.executeQuery();
@@ -136,7 +139,32 @@ public class UserDAO {
             return users;
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("błąd?");
+            System.out.println("Błąd połączenia z bazą");
+            return null;
+        }
+    }
+
+    public User[] findAllByGroupId(int userInput) {
+        try (Connection conn = GetConnection.getConnection()) {
+            statement = conn.prepareStatement(FIND_ALL_USERS_BY_USER_GROUP);
+            statement.setInt(1, userInput);
+            ResultSet resultSet = statement.executeQuery();
+            User[] users = new User[0];
+            while (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getInt("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setEmail(resultSet.getString("email"));
+                if (resultSet.getInt("user_group_id") != 0) {
+                    user.setUserGroup(userGroupDAO.read(resultSet.getInt("user_group_id")));
+                } else {
+                    user.setUserGroup(null);
+                }
+                users = addToArray(user, users);
+            }
+            return users;
+        } catch (SQLException e) {
+            System.out.println("Błąd połączenia z bazą");
             return null;
         }
     }

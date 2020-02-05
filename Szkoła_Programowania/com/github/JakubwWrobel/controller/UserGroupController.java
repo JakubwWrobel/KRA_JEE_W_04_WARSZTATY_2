@@ -4,53 +4,64 @@ import com.github.JakubwWrobel.addin.Checking;
 import com.github.JakubwWrobel.dao.UserGroupDAO;
 import com.github.JakubwWrobel.models.UserGroup;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Scanner;
 
 
 public class UserGroupController {
-    private static UserGroupDAO userDAO = new UserGroupDAO();
+    private static UserGroupDAO userGroupDAO = new UserGroupDAO();
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        update();
+//        update();
 //        create();
 //        delete();
+//        findAll();
 
     }
 
 
-    private static void update() {
-        Scanner scanner = new Scanner(System.in);
+    protected static void update() {
         boolean running = true;
-        userDAO.showAll();
+        userGroupDAO.showAll();
         System.out.println("Podaj ID grupy, którą chcesz zaaktualizować");
-        while(running){
-            UserGroup userGroup = userDAO.read(Checking.checkingInt());
-            if(userGroup == null){
-                System.out.println("Podana groupa nie istnieje");
-            }else{
+        while (running) {
+            UserGroup userGroup = userGroupDAO.read(Checking.checkingInt());
+            if (userGroup == null) {
+                System.out.println("Podana grupa nie istnieje");
+            } else {
                 System.out.println("Podaj nową nazwę groupy: ");
                 String newGroupName = Checking.checkingString(scanner.nextLine());
-                userDAO.update(userGroup);
+                userGroupDAO.update(userGroup);
                 System.out.println("Groupa została uaktualniona");
 
-                running =false;
-                scanner.close();
+                running = false;
             }
         }
     }
 
-    private static void delete() {
+    protected static void delete() {
         int userInput = Checking.checkingInt();
         System.out.println();
     }
 
-    private static void create() {
-        Scanner scanner = new Scanner(System.in);
+    protected static void create() {
         System.out.println("Enter Group Name: ");
         String groupName = Checking.checkingString(scanner.nextLine());
 
         UserGroup userGroup = new UserGroup(groupName);
-        userDAO.create(userGroup);
+        userGroupDAO.create(userGroup);
 
-        scanner.close();
+    }
+
+    protected static void findAll() {
+        UserGroup[] userGroups = userGroupDAO.showAll();
+        if (userGroups == null) {
+            System.out.println("Nie istnieje żadna grupa użytkowników");
+        } else {
+            for (UserGroup userGroup : userGroups) {
+                System.out.println(String.format("ID grupy: %s\nNazwa Grupy: %s\n", userGroup.getUserGroupId(), userGroup.getUserGroupName()));
+            }
+        }
     }
 }

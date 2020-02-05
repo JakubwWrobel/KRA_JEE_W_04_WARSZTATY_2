@@ -67,13 +67,14 @@ public class ExerciseDAO {
                 return exercise;
 
             } else {
-                System.out.println("Podane zadanie nie istnieje");
                 return null;
             }
+        } catch (NullPointerException e) {
+            return null;
         } catch (SQLException e) {
             System.out.println("Błąd połączenia z bazą");
+            return null;
         }
-        return null;
     }
 
     public void delete(int userInput) {

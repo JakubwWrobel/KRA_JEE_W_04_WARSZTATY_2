@@ -5,6 +5,7 @@ import com.github.JakubwWrobel.models.User;
 import com.github.JakubwWrobel.models.UserGroup;
 
 import java.sql.*;
+import java.util.Arrays;
 
 public class UserGroupDAO {
     private static final String CREATE_USERGROUP_QUERY =
@@ -21,14 +22,14 @@ public class UserGroupDAO {
             "UPDATE users SET user_group_id = ? WHERE id = ?";
 
 
-    public User insertUserGroupToUser(User user, int userInput){
-        try(Connection conn = GetConnection.getConnection()){
+    public User insertUserGroupToUser(User user, int userInput) {
+        try (Connection conn = GetConnection.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(UPDATE_USERGROUP_FOR_USER_QUERY);
             statement.setInt(1, userInput);
             statement.setInt(2, user.getId());
             statement.executeUpdate();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.getErrorCode();
             System.out.println("Błąd połączenia z bazą");
         }
@@ -97,20 +98,30 @@ public class UserGroupDAO {
         }
     }
 
-    public  void showAll(){
-        try(Connection conn = GetConnection.getConnection()){
-            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERGROUPS_QUERY);
-            ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
-                System.out.println(String.format("ID groupy: %s\nNazwa Groupy: %s\n", resultSet.getString("id"), resultSet.getString("name")));
-            }
-        }catch (SQLException e){
-            System.out.println("Błąd połączenia z bazą");
-            e.getErrorCode();
-        }
+    private UserGroup[] addToArray(UserGroup[] userGroups, UserGroup userGroup) {
+        UserGroup[] tempUsersGroup = Arrays.copyOf(userGroups, userGroups.length + 1);
+        tempUsersGroup[tempUsersGroup.length - 1] = userGroup;
+        return tempUsersGroup;
     }
 
-
+    public UserGroup[] showAll() {
+        try (Connection conn = GetConnection.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(FIND_ALL_USERGROUPS_QUERY);
+            ResultSet resultSet = statement.executeQuery();
+            UserGroup[] userGroups = new UserGroup[0];
+            while (resultSet.next()) {
+                UserGroup userGroup = new UserGroup();
+                userGroup.setId(resultSet.getInt("id"));
+                userGroup.setUserGroupName(resultSet.getString("name"));
+                userGroups = addToArray(userGroups, userGroup);
+            }
+            return userGroups;
+        } catch (SQLException e) {
+            System.out.println("Błąd połączenia z bazą");
+            e.getErrorCode();
+            return null;
+        }
+    }
 }
 
 

@@ -13,13 +13,13 @@ public class ExerciseController {
     private static ExerciseDAO exerciseDAO = new ExerciseDAO();
 
     public static void main(String[] args) {
-//        create();
+        create();
 //        finAll();
 //        update();
 //        delete();
     }
 
-    private static void create() {
+    protected static void create() {
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
         while (running) {
@@ -42,7 +42,7 @@ public class ExerciseController {
             }
         }
     }
-    private static void update(){
+    protected static void update(){
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
         int userInput;
@@ -71,7 +71,7 @@ public class ExerciseController {
         }
     }
 
-    private static void delete(){
+    protected static void delete(){
         boolean running = true;
         Scanner scanner = new Scanner(System.in);
         int userInput;
@@ -90,7 +90,7 @@ public class ExerciseController {
         }
 
     }
-    private static Exercise[] finAll(){
+    protected static Exercise[] finAll(){
         Exercise[] exercises = exerciseDAO.findAll();
         for(int i = 0; i< exercises.length; i++){
             System.out.println(String.format("ID zadania: %s\nTutuł zadania: %s\nOpis zadania: %s\n",exercises[i].getId(),exercises[i].getTitle(),exercises[i].getDescription()));
