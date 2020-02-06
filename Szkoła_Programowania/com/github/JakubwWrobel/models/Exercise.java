@@ -11,9 +11,6 @@ public class Exercise {
     }
     public Exercise(){};
 
-
-
-
     //SETTER
     public void setId(int id) {
         this.id = id;

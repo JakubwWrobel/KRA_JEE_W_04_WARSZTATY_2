@@ -46,7 +46,7 @@ public class UserGroupController {
     }
 
     protected static void create() {
-        System.out.println("Enter Group Name: ");
+        System.out.println("Podaj nazwę grupy");
         String groupName = Checking.checkingString(scanner.nextLine());
 
         UserGroup userGroup = new UserGroup(groupName);

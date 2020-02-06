@@ -4,16 +4,13 @@ import com.github.JakubwWrobel.addin.Checking;
 import com.github.JakubwWrobel.dao.ExerciseDAO;
 import com.github.JakubwWrobel.models.Exercise;
 
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Scanner;
 
 public class ExerciseController {
     private static ExerciseDAO exerciseDAO = new ExerciseDAO();
 
     public static void main(String[] args) {
-        create();
+//        create();
 //        finAll();
 //        update();
 //        delete();

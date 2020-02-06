@@ -28,8 +28,9 @@ public class SolutionController {
 //         assignUserToExercise();
 //        delete();
 //        findAll();
-        showAllSolutionsByUser();
+//        showAllSolutionsByUser();
 //        findAllByExerciseId();
+//        resolveExercise();
     }
 
     protected static void create() {
@@ -45,7 +46,7 @@ public class SolutionController {
                 Solution solution = new Solution();
                 solutionDAO.create(solution);
                 System.out.println(String.format("Zadanie zostało utworzne, jego ID to: %s\n", solution.getId()));
-                //ExerciseToSolution
+//ExerciseToSolution
                 System.out.println("Chcesz przypisać zadanie do tego rozwiązania?");
                 System.out.println("Yes/No");
                 String userInput2 = Checking.checkingString(scanner.nextLine()).toLowerCase();
@@ -88,6 +89,32 @@ public class SolutionController {
                 solutionDAO.insertExerciseIntoSolution(solution, userInput2);
                 System.out.println("Rozwiązanie zostało przypisane do zadania");
                 running = false;
+            }
+        }
+    }
+
+    protected static void resolveExercise() {
+        boolean running = true;
+        while (running) {
+            User user = showAllSolutionsByUser();
+            if (user == null) {
+
+            } else {
+                System.out.println("Które zadanie(Exercise ID) chcesz rozwiązać: ");
+                int userInput2 = Checking.checkingInt();
+                Exercise exercise = exerciseDAO.read(userInput2);
+                Exercise exercise1 = solutionDAO.isExerciseAssignedToUser(user, exercise);
+                if (exercise == null) {
+                    System.out.println("Podane zadanie nie istnieje");
+                } else if (exercise1 == null){
+                    System.out.println("Podane zadanie nie jest przypisane do użytkownika");
+                } else {
+                    System.out.println("Podaj opis rozwiązania zadania: ");
+                    String description = Checking.checkingString(scanner.nextLine());
+                    solutionDAO.resolveExercise(user, description, exercise1);
+                    System.out.println("Zadanie zostało rozwiązane");
+                    running = false;
+                }
             }
         }
     }
@@ -162,7 +189,7 @@ public class SolutionController {
         }
     }
 
-    protected static void showAllSolutionsByUser() {
+    protected static User showAllSolutionsByUser() {
         boolean running = true;
         int userInput;
         while (running) {
@@ -179,12 +206,15 @@ public class SolutionController {
                     running = false;
                 } else {
                     for (Solution solution : solutions) {
-                        System.out.println(String.format(""));
+                        System.out.println(String.format("ID: %s\nCreated: %s\nDescription: %s\nExercise ID: %s", solution.getId(), solution.getCreated(), solution.getDescription(), solution.getExercise_id().getId()));
                         running = false;
+                        return user;
+
                     }
                 }
             }
         }
+        return null;
     }
 
     protected static void findAllByExerciseId() {
@@ -227,17 +257,17 @@ public class SolutionController {
         int userId;
         int exerciseID;
         for (Solution solution : solutions) {
-            if(solution.getUsers_id() == null){
+            if (solution.getUsers_id() == null) {
                 userId = 0;
-            }else {
+            } else {
                 userId = solution.getUsers_id().getId();
             }
-            if(solution.getExercise_id() == null){
+            if (solution.getExercise_id() == null) {
                 exerciseID = 0;
-            }else {
+            } else {
                 exerciseID = solution.getExercise_id().getId();
             }
-            System.out.println(String.format("ID: %s\nCreated: %s\nUpdated: %s \nDescription: %s\nUser_ID: %s\nExercise_ID: %s\n", solution.getId(), solution.getCreated(), solution.getUpdated(), solution.getDescription(),userId,exerciseID));
+            System.out.println(String.format("Solution ID: %s\nCreated: %s\nUpdated: %s \nDescription: %s\nUser_ID: %s\nExercise_ID: %s\n", solution.getId(), solution.getCreated(), solution.getUpdated(), solution.getDescription(), userId, exerciseID));
         }
         return solutions;
     }

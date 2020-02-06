@@ -9,6 +9,8 @@ public class User {
     private String email;
     private String password;
     private UserGroup userGroup;
+    private int is_admin;
+
 
     public User(String username, String email, String password) {
 
@@ -16,23 +18,20 @@ public class User {
         this.email = email;
         setPassword(password);
     }
+
     public User(String username, String email, String password, UserGroup userGroup) {
         this.username = username;
         this.email = email;
         setPassword(password);
         this.userGroup = userGroup;
     }
-    public User(){};
 
-
-    //    private UserGroup userGroup;
-
+    public User() {
+    }
 
     public boolean checkPassword(String plain) {
         return BCrypt.checkpw(plain, this.password);
     }
-
-    ;
 
 
     //GETTER
@@ -52,8 +51,12 @@ public class User {
         return password;
     }
 
-    public UserGroup getUserGroup(){
+    public UserGroup getUserGroup() {
         return this.userGroup;
+    }
+
+    public int getIs_admin() {
+        return is_admin;
     }
 
     //SETTER
@@ -73,9 +76,11 @@ public class User {
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public void setUserGroup(UserGroup userGroup){
+    public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
     }
 
-
+    public void setIs_admin(int is_admin) {
+        this.is_admin = is_admin;
+    }
 }

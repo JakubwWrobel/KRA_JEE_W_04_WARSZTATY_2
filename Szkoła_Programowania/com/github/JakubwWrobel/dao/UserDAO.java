@@ -1,9 +1,11 @@
 package com.github.JakubwWrobel.dao;
 
+import com.github.JakubwWrobel.addin.Checking;
 import com.github.JakubwWrobel.addin.GetConnection;
 import com.github.JakubwWrobel.models.User;
 import com.github.JakubwWrobel.models.UserGroup;
 import com.mysql.cj.log.NullLogger;
+import jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -21,6 +23,8 @@ public class UserDAO {
             "SELECT * FROM users";
     private static final String FIND_ALL_USERS_BY_USER_GROUP =
             "SELECT * FROM users WHERE user_group_id = ?";
+    private static final String SELECT_PASSWORD =
+            "SELECT password FROM users WHERE email = (SELECT email FROM users WHERE is_admin = 1)";
     private PreparedStatement statement;
     UserGroupDAO userGroupDAO = new UserGroupDAO();
 
@@ -55,8 +59,6 @@ public class UserDAO {
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                System.out.println(String.format("ID: %s\nNazwa użytkownika: %s\nEmail: %s\n", resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("email")));
-
                 User user = new User();
                 user.setId(resultSet.getInt("id"));
                 user.setUsername(resultSet.getString("username"));
@@ -167,5 +169,20 @@ public class UserDAO {
             System.out.println("Błąd połączenia z bazą");
             return null;
         }
+    }
+
+    public static String isAdmin() {
+        try (Connection conn = GetConnection.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(SELECT_PASSWORD);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String passwordAdmin = resultSet.getString("password");
+                return passwordAdmin;
+            }
+        } catch (SQLException e) {
+            System.out.println("Błąd połączenia z bazą");
+            return null;
+        }
+        return null;
     }
 }

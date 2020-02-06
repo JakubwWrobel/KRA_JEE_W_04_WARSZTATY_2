@@ -25,6 +25,10 @@ public class SolutionDAO {
             "SELECT * FROM solution WHERE users_id = ?";
     private static final String FIND_ALL_SOLUTIONS_BY_EXERCISE_ID =
             "SELECT * FROM solution WHERE exercise_id = ?";
+    private static final String UPDATE_DESCRIPTION_BY_EXERCISE_ID =
+            "UPDATE solution SET description = ?, updated = NOW() WHERE exercise_id = ? AND users_id = ?";
+    private static final String FIND_ALL_SOLUTIONS_BY_USER_ID_AND_EXERCISE_ID =
+            "SELECT * FROM solution WHERE users_id = ? AND exercise_id = ?";
 
     private PreparedStatement statement;
     private static ExerciseDAO exerciseDAO = new ExerciseDAO();
@@ -51,9 +55,37 @@ public class SolutionDAO {
             statement.setInt(1, userInput);
             statement.setInt(2, solution.getId());
             statement.executeUpdate();
-
         } catch (SQLException e) {
             System.out.println("Błąd połączenia z bazą");
+        }
+    }
+
+    public void resolveExercise(User user, String description, Exercise exercise) {
+        try (Connection conn = GetConnection.getConnection()) {
+            statement = conn.prepareStatement(UPDATE_DESCRIPTION_BY_EXERCISE_ID);
+            statement.setString(1, description);
+            statement.setInt(2, exercise.getId());
+            statement.setInt(3, user.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Błąd połączenia z bazą");
+        }
+    }
+
+    public Exercise isExerciseAssignedToUser(User user, Exercise exercise) {
+        try (Connection conn = GetConnection.getConnection()) {
+            statement = conn.prepareStatement(FIND_ALL_SOLUTIONS_BY_USER_ID_AND_EXERCISE_ID);
+            statement.setInt(1, user.getId());
+            statement.setInt(2, exercise.getId());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next() == false) {
+                return null;
+            } else {
+                return exercise;
+            }
+        } catch (SQLException e) {
+            System.out.println("Błąd połączenia z bazą");
+            return null;
         }
     }
 

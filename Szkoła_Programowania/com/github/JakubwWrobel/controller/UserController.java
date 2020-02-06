@@ -2,19 +2,19 @@ package com.github.JakubwWrobel.controller;
 
 import com.github.JakubwWrobel.addin.Checking;
 
+import com.github.JakubwWrobel.addin.GetConnection;
 import com.github.JakubwWrobel.dao.UserGroupDAO;
 import com.github.JakubwWrobel.models.User;
 import com.github.JakubwWrobel.dao.UserDAO;
 import com.github.JakubwWrobel.models.UserGroup;
+import jbcrypt.BCrypt;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.SQLOutput;
+import java.sql.*;
 import java.util.Scanner;
 
 public class UserController {
     private static UserDAO userDAO = new UserDAO();
     private static UserGroupDAO userGroupDAO = new UserGroupDAO();
-    private static UserGroupController userGroupController = new UserGroupController();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -25,7 +25,8 @@ public class UserController {
 //        removeUser();
 //        findAll();
 //        findAllByGroupId();
-        assignGroupToUser();
+//        assignGroupToUser();
+//        isAdmin();
 
 
     }
@@ -34,28 +35,28 @@ public class UserController {
         Scanner scanner = new Scanner(System.in);
         boolean running = true;
         while (running) {
-            System.out.println("Enter User Name: ");
+            System.out.println("Podaj nazwę użytkownika ");
             String userName = Checking.checkingString(scanner.nextLine());
 
-            System.out.println("Enter User Email: ");
+            System.out.println("Podaj email użytkownika ");
             String email = Checking.isValidEmailAddress(scanner.nextLine());
 
-            System.out.println("Enter User Password: ");
+            System.out.println("Podaj hasło użytkownika ");
             String password = Checking.checkingString(scanner.nextLine());
 
             User u = new User(userName, email, password);
             try {
                 userDAO.create(u);
-                System.out.println("Would you like to assign the group to the user?");
+                System.out.println("Chcesz przypisać użytkownika do grupy?");
                 System.out.println("Yes/No");
                 String userGroup = Checking.checkingString(scanner.nextLine()).toLowerCase();
                 if (userGroup.equals("yes")) {
                     while (running) {
-                        System.out.println("Provide an ID of the user group: ");
+                        System.out.println("Podaj ID grupy");
                         userGroupDAO.showAll();
                         UserGroup userGroup1 = userGroupDAO.read(Checking.checkingInt());
                         if (userGroup1 == null) {
-                            System.out.println("Following group does not exist");
+                            System.out.println("Podana grupa nie istnieje");
                         } else {
                             int userInput = userGroup1.getUserGroupId();
                             userGroupDAO.insertUserGroupToUser(u, userInput);
@@ -72,10 +73,20 @@ public class UserController {
     }
 
 
-    protected static void readUser() {
-
-        int userInputId = Checking.checkingInt();
-        userDAO.read(userInputId);
+    protected static User readUser() {
+        boolean running = true;
+        while (running) {
+            findAll();
+            System.out.println("Podaj ID użytkownika: ");
+            int userInputId = Checking.checkingInt();
+            User user = userDAO.read(userInputId);
+            if(user == null){
+                System.out.println("Podany użytkownik nie istnieje");
+            }else {
+                return user;
+            }
+        }
+        return null;
     }
 
     protected static void updateUser() {
@@ -207,6 +218,16 @@ public class UserController {
         }
         return null;
     }
-
+    public static boolean isAdmin() {
+        System.out.println("Podaj hasło: ");
+        String password = Checking.checkingString(scanner.nextLine());
+        String passwordAdmin = userDAO.isAdmin();
+        if (BCrypt.checkpw(password, passwordAdmin)) {
+            System.out.println("Ok");
+            return true;
+        } else {
+            System.out.println("Błędne hasło");
+            return false;
+        }
+    }
 }
-

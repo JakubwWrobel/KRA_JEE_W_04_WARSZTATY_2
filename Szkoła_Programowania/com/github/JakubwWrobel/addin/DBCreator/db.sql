@@ -39,3 +39,6 @@ CREATE TABLE solution
     FOREIGN KEY (users_id) REFERENCES users(id)
 
 );
+
+ALTER TABLE users
+ADD COLUMN is_admin boolean DEFAULT 0 not null;
