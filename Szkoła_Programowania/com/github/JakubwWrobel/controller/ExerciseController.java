@@ -34,7 +34,6 @@ public class ExerciseController {
                 running = false;
             } else {
                 System.out.println("Zadanie zostało utworzone");
-                scanner.close();
                 running = false;
             }
         }
@@ -45,7 +44,7 @@ public class ExerciseController {
         int userInput;
         while(running){
             finAll();
-            System.out.println("Podaj ID zadania które chcesz edytować: ");
+            System.out.println("Podaj ID zadania, które chcesz edytować: ");
             userInput = Checking.checkingInt();
             Exercise exercise = exerciseDAO.read(userInput);
             if(exercise == null){
@@ -61,7 +60,6 @@ public class ExerciseController {
                 exerciseDAO.update(exercise);
 
                 running = false;
-                scanner.close();
                 System.out.println("Zadanie zostało zaaktualizowane");
             }
 
@@ -80,7 +78,6 @@ public class ExerciseController {
 
             }else{
                 exerciseDAO.delete(userInput);
-                scanner.close();
                 running = false;
                 System.out.println("Rekord został usunięty");
             }

@@ -23,7 +23,7 @@ public class UserGroupController {
 
     protected static void update() {
         boolean running = true;
-        userGroupDAO.showAll();
+        findAll();
         System.out.println("Podaj ID grupy, którą chcesz zaaktualizować");
         while (running) {
             UserGroup userGroup = userGroupDAO.read(Checking.checkingInt());

@@ -57,6 +57,7 @@ public class Main1 {
                         break;
                     case "2":
                         SolutionController.showAllSolutionsByUser();
+                        break;
                     case "10":
                         userInput = "comeback";
                         break;
@@ -86,7 +87,7 @@ public class Main1 {
         while (!userInput.equals("comeback")) {
             if (userInput.equals("1")) {
                 System.out.println("Wybierz zadanie, które chcesz wykonać: ");
-                System.out.println("1 - Dodać Użytkownika | 2 - Zaktualizować dane użytkownika | 3 - Przypisać/Zaaktualizować Użytkownikowi Grupę |4 - Wyświetlić Użytkownika | 5 - Znaleźć wszystkich użytkowników po numerze grupy | 6 - Pokazać wszystkich użytkowników | 10 - Wróć Do Panelu Użytkownika");
+                System.out.println("1 - Dodać Użytkownika | 2 - Zaktualizować dane użytkownika | 3 - Przypisać/Zaaktualizować Użytkownikowi Grupę |4 - Usunąć Użytkownika | 5 - Znaleźć wszystkich użytkowników po numerze grupy | 6 - Pokazać wszystkich użytkowników | 10 - Wróć Do Panelu Użytkownika");
                 userInput = Checking.checkingString(scanner.nextLine());
                 switch (userInput) {
                     case "1":
@@ -123,12 +124,16 @@ public class Main1 {
                 switch (userInput) {
                     case "1":
                         UserGroupController.create();
+                        break;
                     case "2":
                         UserGroupController.update();
+                        break;
                     case "3":
                         UserGroupController.delete();
+                        break;
                     case "4":
                         UserGroupController.findAll();
+                        break;
                     case "5":
                         userInput = "comeback";
                         break;
