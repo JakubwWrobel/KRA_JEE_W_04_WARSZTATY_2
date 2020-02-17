@@ -5,7 +5,7 @@ Warsztaty nr 2 - KURS JAVA
 #OPIS
 Program należy uruchomić z klasy Main1 która obsługuje panel administracyjny jak i panel użytkownika. Program posiada następującą budowę:
 
-models - zawiera odzwierciedlenie bazy danych oraz specyfikaję odpowiadającch jej nazwą tabel
+models - zawiera odzwierciedlenie bazy danych oraz specyfikację odpowiadających jej nazwą tabel
 dao - posiada funkcjonalności dla odpowiadających jej nazwą tabeli
 controller - wywołuje klasy dao zależnie od pobranych wartości, komunikuje się z użytkownikiem
 
@@ -36,7 +36,7 @@ Szkoła_Programowania/com/github/JakubwWrobel/addin/DBCreator/db.sql
              int userGroupId = resultSet.getInt("user_group_id");
                 UserGroup userGroup = userGroupDAO.read(userGroupId);
                 user.setUserGroup(userGroup);
-                
+
 //CZY MOZE TAK??
                 int exerciseID = resultSet.getInt("exercise_id");
                 Exercise exercise = exerciseDAO.read(exerciseID);
@@ -44,3 +44,5 @@ Szkoła_Programowania/com/github/JakubwWrobel/addin/DBCreator/db.sql
                     solution.setExercise_id(null);
                 } else {
                     solution.setExercise_id(exerciseDAO.read(resultSet.getInt("exercise_id")));
+
+4. Wytłumaczyłbyś mi zastowosanie synchronized (this)?
